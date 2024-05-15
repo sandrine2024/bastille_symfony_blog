@@ -39,7 +39,7 @@
 
         <div class="container my-5">
             <div class="row">
-                <div class="col-md-7 text-center">
+                <div class="col-lg-7 text-center">
                     {# Image #}
                     <img src="/images/visitor/registration/Inscrivez-vous-pour-lire-des-articles-sur-la-sante.png" alt="Inscrivez vous pour lire des articles sur la sante" class="img-fluid">
                 </div>
@@ -107,13 +107,14 @@
             
 
             <div class="my-3 text-center">
-                <p>
-                    Vous avez déjà un compte? 
-                    <a href="">Connectez-vous</a>
-                </p>
-                <p>
-                    <a href="{{path('visitor_welcome_index')}}">Retour à l'accueil</a>
-                </p>
+            <p>
+                Vous avez déjà un compte?
+                <a href="{{path('visitor_authentication_login')}}"> Connectez-vous</a>
+            </p>
+            <p>
+           
+                <a href="{{path('visitor_welcome_index')}}">Retour à l'accueil</a></p>
+            </p>
             </div>
         </div>
     </div>
