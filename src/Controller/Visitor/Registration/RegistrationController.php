@@ -25,7 +25,11 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'visitor_registration_register', methods: ['GET','POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(
+        Request $request, 
+        UserPasswordHasherInterface $userPasswordHasher, 
+        EntityManagerInterface $entityManager
+        ): Response
     {
 
         // Si l'utilisateur est déjà connecté,
@@ -108,9 +112,9 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
+        // @TODO Modifiez la redirection en cas de succès et gérez ou supprimez le message flash dans vos modèles
         $this->addFlash('success', 'Votre compte a été vérifié, vous pouvez vous connecter.');
 
-        return $this->redirectToRoute('visitor_welcome_index');
+        return $this->redirectToRoute('visitor_authentication_login');
     }
 }

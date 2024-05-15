@@ -29,7 +29,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        // 2- Récupérer l'email envoyé par lutilisateur depuis la connexion
+        // 2- Récupérer l'email envoyé par l'utilisateur depuis le formulaire de connexion
         $email = $request->getPayload()->getString('email');
 
         // 3- Sauvegarder l'email en session
@@ -39,7 +39,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
             // à un utilisateur existant dans la base de données
         return new Passport(
             new UserBadge($email),// $user = "SELECT * FROM user WHERE email=:email"
-            new PasswordCredentials($request->getPayload()->getString('password')),// password_verify(string $plainPassword, string email)
+            new PasswordCredentials($request->getPayload()->getString('password')),// password_verify(string $plainPassword, string $hash)
             [
                 new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
                 new RememberMeBadge(),
@@ -50,12 +50,14 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
     {
         // 5- Récupérer l'email précedemment envoyé depuis le formulaire et qui a été sauvegardé en session
             // Effectuer la redirection vers la page de laquelle proviennent les informations.
+            //si l'utilisateur n'est pas connu en base de données, on effectue une redirection vers la page ou les informations proviennent et on recupere l'email précedement envoyé par le formulaire puis sauvegarder en Session
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
 
         // 6- Dans le cas contraire,
             // Effectuer une redirection vers la page d'accueil
+            //si l'utilisateur est connu, on effectue une redirection vers la page d'accueil
         return new RedirectResponse($this->urlGenerator->generate('visitor_welcome_index'));
     }
 
