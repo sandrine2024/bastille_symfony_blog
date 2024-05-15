@@ -21,6 +21,7 @@
 
     {# Favicon #}
     <link rel="icon" href="docteurhistomin.png">
+    
 
 </head>
 <body>
@@ -43,10 +44,17 @@
                         <a class="nav-link" href="{{path('visitor_blog_index')}}">Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a class="nav-link" href="{{path('visitor_contact_index')}}">Contact</a>
                     </li>
                 </ul>
-               
+                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{path('visitor_authentication_login')}}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{path('visitor_registration_register')}}">Inscription</a>
+                    </li>
+                </ul>         
           </div>
         </div>
     </nav>
