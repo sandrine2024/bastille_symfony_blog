@@ -1,6 +1,7 @@
 <?php
 namespace App\Security;
 
+
 use App\Entity\User;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
@@ -11,25 +12,26 @@ class UserChecker implements UserCheckerInterface
 {
     public function checkPreAuth(UserInterface $user): void
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof User) 
+        {
             return;
         }
 
-        // if ($user->isDeleted()) {
-        //     // the message passed to this exception is meant to be displayed to the user
-        //     throw new CustomUserMessageAccountStatusException('Your user account no longer exists.');
-        // }
     }
 
     public function checkPostAuth(UserInterface $user): void
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof User) 
+        {
             return;
         }
 
-        // user account is expired, the user may be notified
+        // Le compte utilisateur est expiré, l'utilisateur peut être averti
         if ( ! $user->isVerified()) {
+            // Si la méthode isVerified() renvoie false, c'est-à-dire que l'utilisateur n'est pas vérifié,
             throw new CustomUserMessageAccountStatusException('Veuillez vérifier votre compte par email avant de vous connecter.');
+            // alors une exception personnalisée est lancée avec un message demandant à l'utilisateur de vérifier son compte par email avant de se connecter.
         }
+        
     }
 }
