@@ -128,7 +128,7 @@ class ResetPasswordController extends AbstractController
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
 
-            $this->addFlash('succes','Le mot de passe a éyé réinitialisé. Vous pouvez vous connecter.');
+            $this->addFlash('succes','Le mot de passe a été réinitialisé. Vous pouvez vous connecter.');
             return $this->redirectToRoute('visitor_authentication_login');
         }
 
