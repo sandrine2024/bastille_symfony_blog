@@ -81,11 +81,20 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/register/waiting-for-email-verification', name:'visitor_registration_waiting_for_email_verification', methods: ['GET'])]
-    public function waitingForEmailVerification():Response
-    {
-        return $this->render('pages/visitor/registration/waiting_for_email_verification.html.twig');
-    }
+    // Cette annotation définit une nouvelle route pour l'application.
+// '/register/waiting-for-email-verification' est l'URI qui sera utilisé dans le navigateur.
+// 'visitor_registration_waiting_for_email_verification' est le nom de la route, qui peut être utilisé pour générer l'URL dans les templates ou les redirections.
+// 'methods: ['GET']' indique que cette route répond uniquement aux requêtes HTTP de type GET.
+#[Route('/register/waiting-for-email-verification', name:'visitor_registration_waiting_for_email_verification', methods: ['GET'])]
+
+// Cette fonction est appelée lorsque la route correspondante est demandée par un navigateur.
+public function waitingForEmailVerification():Response
+{
+    // Cette ligne utilise le service 'render' pour créer une réponse HTTP.
+    // Elle charge le template Twig spécifié et le renvoie comme réponse au navigateur.
+    // 'pages/visitor/registration/waiting_for_email_verification.html.twig' est le chemin vers le template qui sera rendu.
+    return $this->render('pages/visitor/registration/waiting_for_email_verification.html.twig');
+}
 
 
     #[Route('/verify/email', name: 'app_verify_email')]
