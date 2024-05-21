@@ -126,7 +126,7 @@ class Category
     public function removePost(Post $post): static
     {
         if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
+            // définir le côté propriétaire sur null (sauf si déjà modifié)
             if ($post->getCategory() === $this) {
                 $post->setCategory(null);
             }
