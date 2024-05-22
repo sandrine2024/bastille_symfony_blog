@@ -27,7 +27,17 @@ class AdminPostFormType extends AbstractType
                 'placeholder' => "Choississez une catégorie"
 
             ])
-            ->add('imageFile', VichImageType::class)
+            ->add('imageFile', VichImageType::class, [ // Ajoute un champ de formulaire pour le fichier image
+                'required' => false, // Le champ n'est pas requis
+                'allow_delete' => true, // Permet à l'utilisateur de supprimer l'image
+                'delete_label' => "Supprimer l'image existante", // Affiche une étiquette pour l'option de suppression
+                'download_label' => false, // N'affiche pas d'étiquette pour le téléchargement
+                'download_uri' => false, // Désactive l'URI de téléchargement
+                'image_uri' => false, // Désactive l'URI de l'image
+                'imagine_pattern' => '', // Désactive le modèle d'imagination (filtre)
+                // 'imagine_pattern' => 'admin_post'
+                'asset_helper' => true, // Utilise l'assistant d'actifs pour générer l'URI
+            ])
             ->add('content', TextareaType::class)
         ;
     }
