@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -16,15 +18,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
+
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[Assert\NotBlank(message: "Le titre est obligatoire")]
     #[Assert\Length(
         max: 255,
-        maxMessage: 'Le titre ne doit pas dépasser {{ limit }} caractères.',
+        maxMessage: "Le titre ne doit pas dépasser {{ limit }} caractères."
     )]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
@@ -34,52 +39,67 @@ class Post
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+
     #[Assert\NotBlank(message: "La catégorie est obligatoire")]
     #[Assert\Type(
-        Category::class,
+        type: Category::class,
         message: "Cette catégorie est invalide.",
-        )]
+    )]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
+
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     private ?User $user = null;
 
 
-    // NOTE: Il ne s'agit pas d'un champ mapped de métadonnées d'entité, juste d'une simple propriété.
-        
+    // NOTE: This is not a mapped field of entity metadata, just a simple property.
     #[Assert\File(
         maxSize: '2048k',
-        extensions: ['jpeg', 'png', 'jpg', 'webp'],
-        extensionsMessage: 'Veuillez selectionner une image dont le format est "png, jpg, jpeg ou webp"',
+        extensions: ['jpg', 'jpeg', 'png', 'webp'],
+        extensionsMessage: "Seuls les formats 'jpg', 'jpeg', 'png', 'webp' sont autorisés",
     )]
     #[Vich\UploadableField(mapping: 'posts', fileNameProperty: 'image')]
     private ?File $imageFile = null;
 
+
     #[ORM\Column(length: 255, nullable: true, unique: true)]
     private ?string $image = null;
 
-    #[Assert\NotBlank(message: "La contneu est obligatoire")]
+
+    #[Assert\NotBlank(message: "Le contenu est obligatoire")]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
+
     #[ORM\Column]
     private ?bool $isPublished = null;
-    // private ?bool $isPublished = false;
+    
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
+
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
 
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
+    private Collection $tags;
+
+
+
     public function __construct()
     {
         $this->isPublished = false;
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -136,11 +156,11 @@ class Post
     }
 
     /**
-     * Si vous téléchargez manuellement un fichier (c'est-à-dire sans utiliser Symfony Form), assurez-vous d'avoir une instance
-     * de 'UploadedFile' est injecté dans ce setter pour déclencher la mise à jour. Si ce
-     * Le paramètre de configuration du bundle 'inject_on_load' est défini sur 'true' ce setter
-     * doit être capable d'accepter une instance de 'Fichier' car le bundle en injectera une ici
-     *pendant l'hydratation de la Doctrine.
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
      *
      * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
      */
@@ -149,8 +169,8 @@ class Post
         $this->imageFile = $imageFile;
 
         if (null !== $imageFile) {
-            //Il est nécessaire qu'au moins un champ change si vous utilisez la doctrine
-            // sinon les écouteurs d'événements ne seront pas appelés et le fichier est perdu
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
             $this->updatedAt = new \DateTimeImmutable();
         }
     }
@@ -165,7 +185,7 @@ class Post
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(?string $image): static
     {
         $this->image = $image;
 
@@ -228,6 +248,30 @@ class Post
     public function setPublishedAt(?\DateTimeImmutable $publishedAt): static
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): static
+    {
+        $this->tags->removeElement($tag);
 
         return $this;
     }

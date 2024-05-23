@@ -1,26 +1,25 @@
 {% extends 'themes/base_admin.html.twig' %}
 
-{% block title %}Nouveau tag{% endblock %}
+{% block title %}Modifier: {{tag.name}}{% endblock %}
 
-{% block description %}Nouveau tag{% endblock %}
+{% block description %}Modifier ce tag{% endblock %}
 
-{% block keywords %}admin, liste, tags{% endblock %}
+{% block keywords %}admin, liste, tag, modification{% endblock %}
 
 {% block main %}
+    <h1 class="text-center my-3 display-5">Modifier ce tag</h1>
 
-    <h1 class="text-center my-3 display-5">Nouveau tag</h1>
-
- <div class="container mt-5">
+    <div class="container mt-5">
         <div class="row">
             <div class="col-md-4 mx-auto">
                 {{form_start(form)}}
                     <div class="mb-3">
-                        <label for="admin_tag_form_name">Nom</label>
+                        <label for="admin_category_form_name">Nom</label>
                         <div class="text-danger">{{form_errors(form.name)}}</div>
                         {{form_widget(form.name, {'attr':{'class':'form-control', 'autofocus':'autofocus'}})}}
                     </div>
                     <div class="mb-3">
-                        <input formnovalidate type="submit" class="btn btn-primary shadow" value="Créer">
+                        <input formnovalidate type="submit" class="btn btn-primary shadow" value="Modifier">
                     </div>
                 {{form_end(form)}}
             </div>

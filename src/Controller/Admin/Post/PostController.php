@@ -192,7 +192,7 @@ class PostController extends AbstractController
             $this->em->remove($post);
             $this->em->flush();
         }
-
+// hqdkhdc
         return $this->redirectToRoute("admin_post_index");
     }
 
