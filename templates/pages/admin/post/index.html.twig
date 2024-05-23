@@ -6,8 +6,27 @@
 
 {% block keywords %}admin, article{% endblock %}
 
+{% block jQuery %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+{% block dataTables %}
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.7/datatables.min.css" rel="stylesheet"> 
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.7/datatables.min.js"></script>
+    <script>
+        $(document).ready( function () {
+            $('#myTable').DataTable({
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.0.7/i18n/fr-FR.json',
+                },
+            });
+        } );
+    </script>
+{% endblock %}
+
 {% block main %}
     <h1 class="text-center my-3 display-5">Liste des articles</h1>
+
+    {% include 'components/_alert.html.twig' %}
 
     <div class="d-flex justify-content-end align-items-center my-3">
         <a href="{{path('admin_post_create')}}" class="btn btn-primary shadow"><i class="fa-solid fa-plus"></i> Nouvel article</a>
@@ -47,26 +66,30 @@
                             {% else %}
                                 <span>Pas encore</span>
                             {% endif %}
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch">
-                            </div>
+                           
                         </td>
                         <td>
-                            <a href="" class="btn btn-sm btn-dark">Lire</a>
+                            <a href="{{path('admin_post_show', {'id':post.id})}}" class="btn btn-sm btn-dark">Lire</a>
                         </td>
                         <td>{{post.createdAt|format_date()}}</td>
                         <td>{{post.updatedAt|format_date()}}</td>
-                        <td>
-                            <a href="" class="btn btn-sm btn-secondary">Modifier</a>
-                            <form class="d-inline" action="" method="post">
-                                <input type="hidden" name="_csrf_token" value="{{csrf_token('delete_post_'~post.id)}}">
-                                <input onclick="return confirm('Confirmer la suppression?')" type="submit" class="btn btn-sm btn-danger" value="Supprimer">
+                        <td class="d-flex justify-content-evenly align-items-center" style="height: 235px;">
+                            <div class="d-flex flex-column justify-content-center h-100">
+                            <form action="{{path('admin_post_publish', {'id': post.id})}}" method="post">
+                                <div class="form-check form-switch d-flex flex-column align-items-center">
+                                    <input onclick="return confirm('Confirmer cette action?')" onchange="this.form.submit()" class="form-check-input" type="checkbox" role="switch" {{post.isPublished ?'checked' :''}}>
+                                </div>
                             </form>
+                            <form action="{{path('admin_category_delete', {'id':post.id})}}" method="post">
+                                <input type="hidden" name="_csrf_token" value="{{path('admin_category_delete', {'id':post.id})}}"> 
+                                <button class="border-0 " type="submit"><i style='color:red' class="fa-solid fa-trash mt-4"></i></button>
+                            </form>
+                            <a   href="{{path('admin_post_edit', {'id':post.id})}}"><i class="fa-solid fa-pen mt-4"></i></a>
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
 {% endblock %}
