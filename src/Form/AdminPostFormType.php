@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Tag;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\Category;
@@ -19,24 +20,30 @@ class AdminPostFormType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('category', EntityType::class,[
+            ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'multiple' => false,
                 'expanded' => false,
                 'placeholder' => "Choississez une catégorie"
-
             ])
-            ->add('imageFile', VichImageType::class, [ // Ajoute un champ de formulaire pour le fichier image
-                'required' => false, // Le champ n'est pas requis
-                'allow_delete' => true, // Permet à l'utilisateur de supprimer l'image
-                'delete_label' => "Supprimer l'image existante", // Affiche une étiquette pour l'option de suppression
-                'download_label' => false, // N'affiche pas d'étiquette pour le téléchargement
-                'download_uri' => false, // Désactive l'URI de téléchargement
-                'image_uri' => false, // Désactive l'URI de l'image
-                'imagine_pattern' => '', // Désactive le modèle d'imagination (filtre)
-                // 'imagine_pattern' => 'admin_post'
-                'asset_helper' => true, // Utilise l'assistant d'actifs pour générer l'URI
+            ->add('tags', EntityType::class, [
+                'class' => Tag::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => false,
+                'placeholder' => "Choississez un ou plusieurs tags"
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'required' => false,
+                'allow_delete' => true,
+                'delete_label' => "Supprimer l'image existante",
+                'download_label' => false,
+                'download_uri' => false,
+                'image_uri' => false,
+                'imagine_pattern' => false,
+                // 'imagine_pattern' => 'admin_post',
+                'asset_helper' => false,
             ])
             ->add('content', TextareaType::class)
         ;
